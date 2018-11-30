@@ -1,0 +1,15 @@
+swagger: "2.0"
+info:
+  description: "API template"
+  version: "0.0.0"
+  title: "API template"
+host: "localhost:3000"
+paths:
+  /users:
+    get:
+      tags:
+        - "users"
+      summary: "It should send an user but send only a message"
+      responses:
+        200:
+          description: "User response"

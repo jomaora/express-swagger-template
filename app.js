@@ -1,13 +1,15 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const fs = require('fs');
+const jsyaml = require('js-yaml');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const createSwaggerUiMiddleware = require('@coorpacademy/swagger-ui-express');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+const usersRouter = require('./routes/users');
 
-var app = express();
+const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -19,8 +21,17 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
 app.use('/users', usersRouter);
+
+const spec = fs.readFileSync(path.resolve(__dirname, 'swagger.yaml'), 'utf8');
+const swaggerDoc = jsyaml.safeLoad(spec);
+
+app.use(
+	createSwaggerUiMiddleware({
+		swaggerDoc,
+		swaggerUi: '/explorer'
+	})
+);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
