@@ -4,10 +4,14 @@ const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
 const logger = require('morgan');
 const createSwaggerUiMiddleware = require('@coorpacademy/swagger-ui-express');
+const database = require('./database');
 
-const usersRouter = require('./routes/users');
+// TODO: require here your routes files
+const usersRouter = require('./api/v1/users');
+const flightsRouter = require('./api/v1/flights');
 
 const app = express();
 
@@ -20,8 +24,18 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use('/users', usersRouter);
+// Custom middleware to center the database model
+app.use(function(req, res, next) {
+	req.db = database;
+	next();	// On any middleware, next should be called to avoid the timeout error and go to the next middleware!
+});
+
+// TODO: define here your endpoints and attach them to the routes
+app.use('/api/v1/users', usersRouter);
+app.use('/api/v1/flights', flightsRouter);
 
 const spec = fs.readFileSync(path.resolve(__dirname, 'swagger.yaml'), 'utf8');
 const swaggerDoc = jsyaml.safeLoad(spec);
@@ -40,13 +54,17 @@ app.use(function(req, res, next) {
 
 // error handler
 app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+	// set locals, only providing error in development
+	if (process.env.NODE_ENV !== 'test') console.log(err);
+	res.locals.message = err.message;
+	res.locals.error = req.app.get('env') === 'development' ? err : {};
+	res.status(err.status || 500);
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+	if (req.accepts('application/json')) {
+		return res.send(err);
+	}
+	// render the error page
+	res.render('error');
 });
 
 module.exports = app;
