@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "start:dev": "nodemon --config nodemon.json"
+    "start:dev": "nodemon --config nodemon.json",
+    "test": "NODE_ENV=test nyc mocha test/**/*.js"
   },
   "dependencies": {
     "@coorpacademy/swagger-ui-express": "^1.0.1",
@@ -22,6 +23,11 @@
     "sqlite3": "^4.0.4"
   },
   "devDependencies": {
-    "nodemon": "^1.18.7"
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0",
+    "nock": "^10.0.2",
+    "nyc": "^13.1.0",
+    "nodemon": "^1.18.7",
+    "supertest": "^3.3.0"
   }
 }
