@@ -7,11 +7,11 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const logger = require('morgan');
 const createSwaggerUiMiddleware = require('@coorpacademy/swagger-ui-express');
-const database = require('./database');
+const database = require('./src/database');
 
 // TODO: require here your routes files
-const usersRouter = require('./api/v1/users');
-const flightsRouter = require('./api/v1/flights');
+const usersRouter = require('./src/api/v1/users');
+const flightsRouter = require('./src/api/v1/flights');
 
 const createServer = () => {
 	const app = express();
@@ -24,7 +24,7 @@ const createServer = () => {
 	app.use(express.json());
 	app.use(express.urlencoded({ extended: false }));
 	app.use(cookieParser());
-	app.use(express.static(path.join(__dirname, 'public')));
+	app.use(express.static(path.join(__dirname, 'src/public')));
 	app.use(bodyParser.json());
 	app.use(bodyParser.urlencoded({ extended: false }));
 

@@ -1,5 +1,5 @@
 const express = require('express');
-const {BadRequest} = require('http-errors')
+const {BadRequest} = require('http-errors');
 const router = express.Router();
 
 router.get('/', async (req, res) => {

@@ -7,7 +7,7 @@
   ],
   "report-dir": "./coverage",
   "include": [
-    "api/**/*.js"
+    "src/**/*.js"
   ],
   "exclude": [
     "bin/",
