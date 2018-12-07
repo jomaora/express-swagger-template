@@ -3,7 +3,7 @@
 const {expect} = require('chai');
 const request = require('supertest');
 const createServer = require('../../app');
-const database = require('../../database');
+const database = require('../../src/database');
 const fixtures = require('../fixtures/flights')
 
 const server = request(createServer());
