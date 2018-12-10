@@ -42,3 +42,8 @@ This command uses nodemon and will watch your files to restart the server if any
 
 [Make database operation with Sequelize](https://sequelize.readthedocs.io/en/v3/docs/models-usage/)
 
+[JWT docs](https://jwt.io/)
+
+[JWT npm library](https://www.npmjs.com/package/jsonwebtoken)
+
+[Templating EJS](https://ejs.co/)
