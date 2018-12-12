@@ -27,6 +27,67 @@ paths:
             type: array
             items:
               $ref: "#/definitions/User"
+    post:
+      tags:
+        - users
+      summary: Return the new user
+      parameters:
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        201:
+          description: Returns a new user
+          schema:
+            $ref: "#/definitions/User"
+  /users/{username}:
+    get:
+      tags:
+        - users
+      summary: Returns an unique user
+      parameters:
+        - name: username
+          type: string
+          in: path
+          description: The user username
+      response:
+        200:
+          description: Returns an unique user
+          schema:
+            $ref: "#/definitions/User"
+    put:
+      tags:
+        - users
+      summary: Update a given user
+      parameters:
+        - name: username
+          type: string
+          in: path
+          description: The user username
+        - name: body
+          in: body
+          type: object
+          parameters:
+            country: string
+            avatar: string
+      response:
+        200:
+          description: Returns an unique user
+          schema:
+            $ref: "#/definitions/User"
+    delete:
+      tags:
+        - users
+      summary: Delete a given user
+      parameters:
+        - name: username
+          type: string
+          in: path
+          description: The user username
+      response:
+        204:
+          description: The user has been deleted
   /flights:
     get:
       tags:
@@ -73,7 +134,67 @@ paths:
         - in: path
           name: reference
           required: true
-          type: string 
+          type: string
+      responses:
+        200:
+          description: The given flight
+          schema:
+            $ref: '#/definitions/Flight'
+    put:
+      tags:
+        - flights
+      parameters:
+        - in: path
+          name: reference
+          required: true
+          type: string
+        - name: body
+          in: body
+          type: object
+          properties:
+            origin:
+              type: string
+            destination:
+              type: string
+      response:
+        200:
+          description: The updated flight
+          schema:
+            $ref: '#/definitions/Flight'
+  /bookings:
+    post:
+      tags:
+        - bookings
+      parameters:
+        - in: body
+          name: body
+          type: object
+          properties:
+            flight_ref:
+              type: string
+            username:
+              type: string
+      responses:
+        201:
+          description: "The new booking"
+          schema:
+            $ref: '#/definitions/Booking'
+  /bookings/{reference}:
+    put:
+      tags:
+        - bookings
+      parameters:
+        - in: body
+          name: body
+          type: object
+          properties:
+            flight_ref:
+              type: string
+      responses:
+        200:
+          description: "The updated booking"
+          schema:
+            $ref: '#/definitions/Booking'
 definitions:
   User:
     type: object
@@ -128,3 +249,16 @@ definitions:
       placesLeft: 30
       price: 200
       company: 'Air France'
+  Booking:
+    type: object
+    properties:
+      reference:
+        type: string
+      username:
+        type: string
+      flight_ref:
+        type: string
+    exemple:
+      reference: 'ABC-123'
+      username: 'jomaora'
+      flight_ref: 'AF_123'
