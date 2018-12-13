@@ -26,4 +26,25 @@ router.get('/', async (req, res, next) => {
   }
 });
 
+router.post('/', async(req, res) => {
+	try {
+		// Vérifier que il y a un username, fullname, country
+		const body = req.body;
+		if (body.username && body.fullname && body.country) {
+			// Insert dans la bdd
+			const {Users} = req.db;
+			const user = await Users.create(body);
+			return res.status(201).send(user);
+		}
+		else {
+			return res.status(400).send({message: 'Missing data'});
+		}	
+	} catch (err) {
+		if (err.name === 'SequelizeUniqueConstraintError') {
+			return res.status(409).send({message: 'User exists déjà'})
+		}
+	}
+	
+});
+
 module.exports = router;

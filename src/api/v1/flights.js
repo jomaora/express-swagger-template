@@ -2,6 +2,18 @@ const express = require('express');
 const {BadRequest} = require('http-errors');
 const router = express.Router();
 
+router.get('/:reference', async (req, res) => {
+	const reference = req.params.reference;
+	const {Flights} = req.db;
+	const flight = await Flights.findOne({ where: {reference: reference} });
+	if (flight) {
+		return res.status(200).send(flight);
+	} else {
+		return res.status(404)
+			.send({message: `Reference ${reference} not found`});
+	}
+});
+
 router.get('/', async (req, res) => {
 	const {origin, destination, company} = req.query;
 	const filter = {

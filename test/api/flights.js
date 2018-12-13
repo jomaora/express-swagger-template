@@ -77,4 +77,19 @@ describe('Flight api', function() {
 			expect(body.message.errors).to.be.an('array');
 		});
 	});
+
+	describe('GET /api/v1/flights/:reference', function() {
+		it("La reference donnée n'existe pas alors j'ai un 404", async () => {
+			await server.get('/api/v1/flights/je-n-existe-pas')
+				.expect(404);
+		});
+
+		it("La reference donnée existe donc j'ai un 200 avec un vol", async () => {
+			const {body: flight} = await server.get('/api/v1/flights/AF-123')
+				.expect(200);
+
+			expect(flight.reference).to.equal('AF-123');
+			expect(flight.origin).to.equal('CDG');
+		});
+	});
 });

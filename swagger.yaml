@@ -71,11 +71,19 @@ paths:
           parameters:
             country: string
             avatar: string
-      response:
+      responses:
         200:
           description: Returns an unique user
           schema:
             $ref: "#/definitions/User"
+        400:
+          description: Missing data
+          schema:
+            $ref: "#/definitions/Error"
+        404:
+          description: The given username does not exists in database
+          schema:
+            $ref: "#/definitions/Error"
     delete:
       tags:
         - users
@@ -262,3 +270,10 @@ definitions:
       reference: 'ABC-123'
       username: 'jomaora'
       flight_ref: 'AF_123'
+  Error:
+    type: object
+    properties:
+      message:
+        type: string
+    example:
+      message: Description error
