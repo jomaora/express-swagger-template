@@ -38,8 +38,9 @@ const createServer = () => {
 			swaggerUi: '/explorer'
 		})
 	);
-
-	app.use(auth());
+	// BONUS: Si vous souhaitez ajouter la gestion de l'authentification
+	// vous pouvez decommenter ce ligne et implementer le code nécessaire
+	// app.use(auth());
 
 	// Custom middleware to center the database model
 	app.use(function(req, res, next) {
