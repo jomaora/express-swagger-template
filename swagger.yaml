@@ -5,6 +5,13 @@ info:
   title: "API template"
 host: "localhost:3000"
 basePath: "/api/v1"
+produces:
+  - "application/json"
+securityDefinitions:
+  authorization:
+    type: apiKey
+    name: authorization
+    in: header
 paths:
   /users:
     get:
@@ -121,6 +128,8 @@ paths:
       tags:
         - flights
       summary: Creates a flights
+      security:
+        - authorization: []
       parameters:
         - name: body
           in: body

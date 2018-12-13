@@ -8,6 +8,7 @@ const bodyParser = require('body-parser');
 const logger = require('morgan');
 const createSwaggerUiMiddleware = require('@coorpacademy/swagger-ui-express');
 const database = require('./src/database');
+const auth = require('./src/lib/auth');
 
 // TODO: require here your routes files
 const usersRouter = require('./src/api/v1/users');
@@ -28,16 +29,6 @@ const createServer = () => {
 	app.use(bodyParser.json());
 	app.use(bodyParser.urlencoded({ extended: false }));
 
-	// Custom middleware to center the database model
-	app.use(function(req, res, next) {
-		req.db = database;
-		next();	// On any middleware, next should be called to avoid the timeout error and go to the next middleware!
-	});
-
-	// TODO: define here your endpoints and attach them to the routes
-	app.use('/api/v1/users', usersRouter);
-	app.use('/api/v1/flights', flightsRouter);
-
 	const spec = fs.readFileSync(path.resolve(__dirname, 'swagger.yaml'), 'utf8');
 	const swaggerDoc = jsyaml.safeLoad(spec);
 
@@ -47,6 +38,18 @@ const createServer = () => {
 			swaggerUi: '/explorer'
 		})
 	);
+
+	app.use(auth());
+
+	// Custom middleware to center the database model
+	app.use(function(req, res, next) {
+		req.db = database;
+		next();	// On any middleware, next should be called to avoid the timeout error and go to the next middleware!
+	});
+
+	// TODO: define here your endpoints and attach them to the routes
+	app.use('/api/v1/users', usersRouter);
+	app.use('/api/v1/flights', flightsRouter);
 
 // catch 404 and forward to error handler
 	app.use(function(req, res, next) {
