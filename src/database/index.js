@@ -13,7 +13,7 @@ const port        = url ? url[5] : null;
 const host        = url ? url[4] : null;
 
 // Here we verify the environmental variable to know if we're on test, development or production
-const storage     = process.env.NODE_ENV === 'test' ? 'database-test.sqlite' : process.env.DATABASE_STORAGE || 'database.sqlite';
+const storage     = process.env.DATABASE_STORAGE || 'database.sqlite';
 
 const sequelize = new Sequelize(DB_name, user, pwd, {
 	dialect,
@@ -25,6 +25,9 @@ const sequelize = new Sequelize(DB_name, user, pwd, {
 	logging: process.env.NODE_ENV !== 'test'
 });
 
+// TODO: Add here all your mapped models of your database
+const Users = sequelize.import(path.join(__dirname, 'users'));
+
 sequelize.sync()
 	.then(() => {
 		console.log('DB loaded');
@@ -35,11 +38,6 @@ sequelize.sync()
 		});
 	})
 ;
-
-// TODO: Add here all your mapped models of your database
-const Users = sequelize.import(path.join(__dirname, 'users'));
-
-
 
 // TODO: And export them
 exports.Users = Users;
