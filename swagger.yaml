@@ -10,15 +10,22 @@ paths:
     get:
       tags:
         - "users"
-      summary: "It should send an user but send only a message"
-      responses:
-        200:
-          description: "User response"
-  /resource:
+      summary: "It should send a list of users"
+  /example/{pathParam}:
     get:
       tags:
         - "resource"
-      summary: "It should send an user but send only a message"
-      responses:
-        200:
-          description: "User response"
+      parameters:
+        - name: pathParam
+          in: path
+          description: A variable value passed on the path part of the URL
+          required: true
+          schema:
+            type: string
+          example: value1
+        - name: filter
+          in: query
+          schema:
+            type: string
+          description: A variable value passed on the querystring part of the URL
+      summary: "This is an example to show you a definition of an endpoint"
