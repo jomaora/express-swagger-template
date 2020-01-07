@@ -5,6 +5,17 @@ var router = express.Router();
 // POST /flights
 router.post('/', async (req, res, next) => {
   try {
+    const authorisationToken = req.get('Authorization');
+    console.log(authorisationToken);
+
+    if (!authorisationToken) {
+      return res.status(401).send('Missing Authorization header');
+    }
+
+    if (authorisationToken !== 'Bearer toto') {
+      return res.status(403).send("Vous n'êtes pas authorisé à executer cette action.");
+    }
+
     const data = req.body;
     if (!data.flightNumber || !data.company || !data.departure || !data.destination || !data.date) {
       return res.status(400).send('Missing data');

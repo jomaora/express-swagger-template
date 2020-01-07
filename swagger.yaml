@@ -6,6 +6,11 @@ info:
 servers:
   - url: 'http://localhost:3000/'
 components:
+  securitySchemes:
+    bearerAuth:            # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   schemas:
     Flight:
       type: object
@@ -31,6 +36,8 @@ components:
           type: string
         country:
           type: string
+security:
+  - bearerAuth: []
 paths:
   /users:
     get:
@@ -78,6 +85,8 @@ paths:
       tags:
         - "flights"
       summary: "It create a flight"
+      security:
+        - bearerAuth: []
       requestBody:
         description: The body containing the data to create the flight
         content:
@@ -114,6 +123,10 @@ paths:
                 $ref: '#/components/schemas/Flight'
         '400':
           description: Missing data
+        '401':
+          description: Missing authorization header
+        '403':
+          description: user has not rights to execute this feature
         '409':
           description: The vol exists already
   /flights/{flightNumber}:
