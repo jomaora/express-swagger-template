@@ -11,6 +11,7 @@ const database = require('./src/database');
 
 // TODO: require here your routes files
 const usersRouter = require('./routes/users');
+const flightsRouter = require('./routes/flights');
 
 const app = express();
 
@@ -44,6 +45,7 @@ app.use(function(req, res, next) {
 
 // TODO: Add here your routes
 app.use('/users', usersRouter);
+app.use('/flights', flightsRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -1,31 +1,183 @@
 openapi: 3.0.0
 info:
-  description: "API template"
+  description: "API contient des infos sur des utilisateurs"
   version: "0.0.0"
-  title: "API template"
+  title: "API LPDW 2020"
 servers:
   - url: 'http://localhost:3000/'
+components:
+  schemas:
+    Flight:
+      type: object
+      properties:
+        flightNumber:
+          type: string
+        company:
+          type: string
+        departure:
+          type: string
+        destination:
+          type: string
+        date:
+          type: string
+        status:
+          type: string
+    User:
+      type: object
+      properties:
+        username:
+          type: string
+        fullname:
+          type: string
+        country:
+          type: string
 paths:
   /users:
     get:
       tags:
         - "users"
       summary: "It should send a list of users"
-  /example/{pathParam}:
+      parameters:
+        - in: query
+          name: username
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The list of users
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  /flights:
     get:
       tags:
-        - "resource"
+        - "flights"
+      summary: "It should send a list of flights"
       parameters:
-        - name: pathParam
-          in: path
-          description: A variable value passed on the path part of the URL
-          required: true
+        - in: query
+          name: depart
           schema:
             type: string
-          example: value1
-        - name: filter
-          in: query
+        - in: query
+          name: destination
           schema:
             type: string
-          description: A variable value passed on the querystring part of the URL
-      summary: "This is an example to show you a definition of an endpoint"
+      responses:
+        '200':
+          description: The list of flights matching with the given conditions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Flight'
+        '400':
+          description: One of the conditions is empty
+    post:
+      tags:
+        - "flights"
+      summary: "It create a flight"
+      requestBody:
+        description: The body containing the data to create the flight
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Flight'
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                flightNumber:
+                  type: string
+                company:
+                  type: string
+                departure:
+                  type: string
+                destination:
+                  type: string
+                date:
+                  type: string
+              required:
+                - flightNumber
+                - company
+                - departure
+                - destination
+                - date
+      responses:
+        '201':
+          description: A User object
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/Flight'
+        '400':
+          description: Missing data
+        '409':
+          description: The vol exists already
+  /flights/{flightNumber}:
+    get:
+      tags:
+        - "flights"
+      summary: "It should send a flight with the given flightNumber"
+      parameters:
+        - in: path
+          name: flightNumber
+          schema:
+            type: string
+            required: true
+      responses:
+        '200':
+          description: 'The given flight'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Flight'
+        '404':
+          description: 'The given flight does not exist'
+    put:
+      tags:
+        - "flights"
+      summary: "It updates a flight"
+      parameters:
+        - in: path
+          name: flightNumber
+          schema:
+            type: string
+            required: true
+      requestBody:
+        description: The body with the data to update the flight
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                date:
+                  type: string
+      responses:
+        '200':
+          description: 'The updated flight'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Flight'
+        '400':
+          description: The given data is unvalid
+        '404':
+          description: 'The given flight does not exist'
+    delete:
+      tags:
+        - "flights"
+      summary: "It deletes a flight"
+      parameters:
+        - in: path
+          name: flightNumber
+          schema:
+            type: string
+            required: true
+      responses:
+        '204':
+          description: 'Flight deleted'

@@ -27,20 +27,17 @@ const sequelize = new Sequelize(DB_name, user, pwd, {
 
 // TODO: Add here all your mapped models of your database
 const Users = sequelize.import(path.join(__dirname, 'users'));
+const Flights = sequelize.import(path.join(__dirname, 'flights'));
 
 sequelize.sync()
 	.then(() => {
 		console.log('DB loaded');
-		Users.create({
-			fullname: faker.name.findName(),
-			username: faker.internet.userName(),
-			country: faker.address.country()
-		});
 	})
 ;
 
 // TODO: And export them
 exports.Users = Users;
+exports.Flights = Flights;
 
 // Exporting sequelize object to allow raw queries if needed
 exports.sequelize = sequelize;
