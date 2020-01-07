@@ -142,6 +142,10 @@ paths:
           schema:
             type: string
             required: true
+        - in: header
+          name: accept
+          schema:
+            type: string
       responses:
         '200':
           description: 'The given flight'
@@ -149,8 +153,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Flight'
+            text/html:
+              schema:
+                type: string
         '404':
           description: 'The given flight does not exist'
+          content:
+            application/json:
+              schema:
+                type: object
+            text/html:
+              schema:
+                type: string
     put:
       tags:
         - "flights"

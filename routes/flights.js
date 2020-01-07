@@ -43,9 +43,23 @@ router.get('/:flightNumber', async (req, res, next) => {
     const flight = await Flights.findOne({where: {flightNumber: flightNumber}});
 
     if (!flight) {
-      return res.status(404).send('Vol ' + flightNumber + " existe pas")
+      if (req.accepts('html')) {
+        return res.render('error', {
+          message: 'Flight not found',
+          error: {
+            status: 404,
+            stack: ''
+          }
+        });
+      }
+      return res.status(404).send({
+          message: 'Vol ' + flightNumber + " existe pas"
+      })
     }
 
+    if (req.accepts('html')) {
+        return res.render('flight', {flight: flight});
+    }
     return res.send(flight);
   } catch(err) {
     next(err);

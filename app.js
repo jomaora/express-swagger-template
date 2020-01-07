@@ -43,6 +43,8 @@ app.use(function(req, res, next) {
 	next();	// On any middleware, next should be called to avoid the timeout error and go to the next middleware!
 });
 
+// GET /bookings
+
 // TODO: Add here your routes
 app.use('/users', usersRouter);
 app.use('/flights', flightsRouter);
@@ -60,7 +62,16 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+
+	const format = req.get('accept');
+
+	if (req.accepts('html')) {
+		return res.render('error');
+	}
+	return res.send({
+		message: err.message,
+		stack: err.stack
+	});
 });
 
 module.exports = app;

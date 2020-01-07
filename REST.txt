@@ -1,0 +1,110 @@
+RESSOURCE
+/flights
+
+----------------------------------------------------------
+Feature: Liste des vols
+Description: Retourner la liste de vols correspondant aux paramètre données
+Endpoint: GET /flights?depart={depart}&destination={destination}
+
+Scenarios
+
+1. Si l'utilisateur ne met pas de paramètres
+  Exemple
+    GET /flights
+    Réponse: 200, on récupère tous les vols.
+
+2. Si l'utilisateur met des paramètres
+
+  2.1 et il met un ville qui n'existe pays
+    Exemple
+      GET /flights?depart=Disneyland&destination=Atlantide
+      Réponse 200, avec une liste vide
+
+  2.2 il met une ville qui n'a pas d'aéroport ==>
+    Exemple
+      GET /flights?depart=New York&destination=Gennevillers
+      Reponse 200, avec une liste vide
+
+  2.3 mais il ne met pas un des paramètres de recherche
+    Exemple
+      GET /flights?depart=&destination=Paris
+      Réponse 400, parce les paramètre de recherche sont obligatoires.
+
+----------------------------------------------------------
+Feature: Créer un vol
+Endpoint: POST /flights
+Description : Les données nécessaires pour representer un vol sont
+  -  numero de vol
+  -  compagnie
+  -  depart
+  -  destination
+  -  date
+  -  status (optionnel)
+
+Scenario 1  => CODE ET OK !
+  Toutes les données obligatoires sont remplies     --> 201 CREATED
+  Exemple POST /flights
+
+  {flightNumber: "123", ...}
+
+Scenario 2      => CODE ET OK !
+  Une ou plusieurs données sont manquantes --> 400
+
+Scenario 3      => CODE ET OK !
+  Duplication du vol                      --> 409
+
+----------------------------------------------------------
+Feature: Afficher un vol specifique par son flightNumber
+GET /flights/:flight_number
+
+Scenario 1:   GET  /flights/DDDDD   CODE ET OK
+Le vol DDD n'existe pas
+            On retourne un 404
+
+Scenario 1:   CODE ET OK
+  GET  /flights/AF123           --> 200
+
+----------------------------------------------------------
+PUT /flights/:flight_number
+  Il permet de modifier la date / status
+
+  quand le vol existe, quand le données à modifier sont valables et correctes   --> 200
+  la date donnée n'existe pas = 31/02/2020                                      --> 400
+  status n'est ni READY ni CANCELLED                                            --> 400
+  le vol avec l'identifiant donnée n'existe pays                                --> 404
+
+DELETE /flights/:flight_number
+  Vol supprimée   200
+  Vol non trouvé  404
+
+
+
+
+FEATURE: SUPPOSONS LA FEATURE UN USER SE CONNECTE
+
+POST /users/login
+
+
+-------------
+400 BAD REQUEST
+404 NOT FOUND
+409 CONFLICT
+------------
+
+
+Banque
+
+Feature: Retirer de l'argent
+
+POST /account/:accountNumber/withdraw
+body
+  quantité à retirer.
+
+Scenario 1: L'utilisateur n'a pas assez d'argent pour retirer.
+  Réponse 409
+
+Scenario 3: L'utilisateur qui fait la demande ne transmet pas ses identifiants
+            ==> il n'y a pas de header authorisation
+
+Scenario 2: L'utilisateur qui fait la demande n'est pas le propriétaire de la compte sur laquelle
+            il essaie de faire le retrait.
